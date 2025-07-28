@@ -14,6 +14,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+
 // User model - Represents a user account in our authentication system
 // This model stores both OAuth users (Google, GitHub, etc.) and credential users (email/password)
 model User {
