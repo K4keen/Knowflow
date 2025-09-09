@@ -1,0 +1,5 @@
+09/09
+完成prisma配置，route.ts还有问题
+Login Form/page完成 Auth.ts还有问题
+layout/page还需要修改
+前端需要修改 参考app05

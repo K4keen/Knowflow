@@ -14,7 +14,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 // User model - Represents a user account in our authentication system
 // This model stores both OAuth users (Google, GitHub, etc.) and credential users (email/password)
 model User {
@@ -30,6 +29,7 @@ model User {
   // Relationship fields - Define how this model relates to other models
   accounts      Account[]                          // One user can have multiple linked accounts (for OAuth providers)
   sessions      Session[]                          // One user can have multiple active sessions (for database-stored sessions)
+  projects      Project[]                          // One user can have multiple projects (chat sessions)
 }
 
 // Account model - Stores OAuth provider account information
@@ -77,3 +77,51 @@ model VerificationToken {
   // Composite unique constraint: ensures unique identifier-token combinations
   @@unique([identifier, token])
 }
+
+// Project model - Represents a chat session/notebook project
+model Project {
+  id          String   @id @default(cuid())
+  name        String                              // Project/chat name
+  description String?                             // Optional project description
+  userId      String                              // Foreign key referencing User.id
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  lastUsedAt  DateTime @default(now())           // Track usage for sorting
+  usageCount  Int      @default(0)               // Track how many times it's been opened
+
+  // Relationships
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  documents   Document[] // Documents uploaded to this project for RAG
+  messages    Message[]  // Chat messages in this project
+}
+
+// Document model - Stores uploaded documents for RAG functionality
+model Document {
+  id          String   @id @default(cuid())
+  name        String                              // Original filename
+  type        String                              // File type/extension
+  size        Int                                 // File size in bytes
+  content     String?  @db.Text                  // Extracted text content (optional for future use)
+  url         String?                             // File storage URL (if using external storage)
+  s3Key       String?  @unique                   // S3 object key for direct access
+  status      String   @default("UPLOADED")      // UPLOADED, PROCESSING, VECTORIZED, FAILED
+  projectId   String                              // Foreign key referencing Project.id
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relationships
+  project     Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+// Message model - Stores chat messages
+model Message {
+  id        String   @id @default(cuid())
+  content   String   @db.Text                    // Message content
+  role      String                               // "user" or "assistant"
+  projectId String                               // Foreign key referencing Project.id
+  createdAt DateTime @default(now())
+
+  // Relationships
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
