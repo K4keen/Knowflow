@@ -3,3 +3,7 @@
 Login Form/page完成 Auth.ts还有问题
 layout/page还需要修改
 前端需要修改 参考app05
+
+09/17
+Register Form要改
+重新设计整个页面（主页和注册登录页）
