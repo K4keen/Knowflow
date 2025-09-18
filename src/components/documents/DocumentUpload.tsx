@@ -31,8 +31,9 @@ export default function DocumentUpload() {
 
       if (!res.ok) throw new Error('上传失败');
       setSuccess(true);
-    } catch (err: any) {
-      setError(err.message || '上传出错');
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : '上传出错';
+      setError(errorMessage);
     } finally {
       setUploading(false);
       setProgress(0);
