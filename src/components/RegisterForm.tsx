@@ -1,5 +1,5 @@
 "use client";
-import z from "zod";
+import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { useTransition } from "react";
@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
     name: z.string().min(1, { message: "Name is required" }),
@@ -52,11 +53,9 @@ export default function RegisterForm() {
         // Registration successful - show success message and reset form
         setMessage({ text: result.message, type: 'success' });
         
-        // Reset the form after successful registration
         form.reset();
         
-        // Optional: Redirect to login page after successful registration
-        // import { useRouter } from 'next/navigation'; const router = useRouter(); router.push('/login');
+        const router = useRouter(); router.push('/login');
       }
     });
   };
@@ -122,7 +121,7 @@ export default function RegisterForm() {
           </CardContent>
           
           <CardFooter className="flex flex-col items-center space-y-4">
-            <Button type="submit" className="w-full" disabled={isPending}>
+            <Button type="submit" className="w-full block mt-4" disabled={isPending}>
               {isPending ? 'Registering...' : 'Create Account'}
             </Button>
             

@@ -14,14 +14,14 @@ export default function Home() {
               Welcome to your AI-powered knowledge management platform
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <Link href="/login" className="w-full">
+          <CardContent className="space-y-4 ">
+            <div className="space-y-0">
+              <Link href="/login" className="w-full block mb-4">
                 <Button className="w-full" size="lg">
                   Sign In
                 </Button>
               </Link>
-              <Link href="/register" className="w-full">
+              <Link href="/register" className="w-full block">
                 <Button variant="outline" className="w-full" size="lg">
                   Create Account
                 </Button>
